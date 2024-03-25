@@ -10,6 +10,8 @@ int StringCompare(const char* str1, const char* str2);
 char* StringSubstring(const char* str, int index, int length);
 
 int StringFind(const char* str, const char* findStr, int index = 0);
+char* StringReplace(const char* str, const char* oldStr, const char* newStr, int index = 0);
+
 
 int main()
 {
@@ -27,9 +29,12 @@ int main()
     std::cout << str << "\n";*/
 
 
-    //std::cout << StringSubstring("Hello world", 6, 3) << "\n";
+    //std::cout << StringSubstring("Hello world", 0, StringLength("Hello world") - 0) << "\n";
 
-    std::cout << StringFind("Hello wwow", "wow") << "\n";
+    //std::cout << StringFind("Hello wwow", "wow") << "\n";
+
+    char* s = StringReplace("Hello world, Hello people", "Hello", "By");
+    std::cout << s << "\n";
     
 }
 
@@ -102,7 +107,7 @@ int StringCompare(const char* str1, const char* str2)
 char* StringSubstring(const char* str, int index, int length)
 {
     int lengthStr = StringLength(str);
-    if (index >= lengthStr || index + length >= lengthStr || index < 0 || length < 0)
+    if (index > lengthStr || index + length > lengthStr || index < 0 || length < 0)
         return nullptr;
 
     char* strResult = new char[length + 1];
@@ -150,4 +155,29 @@ int StringFind(const char* str, const char* findStr, int index)
 
 
     return 0;
+}
+
+char* StringReplace(const char* str, const char* oldStr, const char* newStr, int index)
+{
+    char* dest = new char;
+    *dest = '\0';
+
+    int lengthStr{ StringLength(str) };
+    int lengthOld{ StringLength(oldStr) };
+    int begin{ index };
+    int end{};
+
+    while (end < lengthStr)
+    {
+        end = StringFind(str, oldStr, begin);
+        if (end == -1)
+            break;
+        StringConcat(dest, StringSubstring(str, begin, end - begin));
+        StringConcat(dest, newStr);
+        begin = end + lengthOld;
+    }
+
+    StringConcat(dest, StringSubstring(str, begin, lengthStr - begin));
+
+    return dest;
 }
